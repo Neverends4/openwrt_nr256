@@ -3,7 +3,7 @@ Adding dts and necessary files to support **Netcore NR256** router in openwrt
 
 For personal record usage. If you bumped into this repo and want to use the patch, some hints below:
 
-1. This patch only applies to Netcore NR256, an outdated wired-ONLY router with RT3052F CPU, 8M NOR ROM and 64M SDR RAM.
+1. This patch only applies to **Netcore NR256**, an outdated wired-ONLY router with RT3052F CPU, 8M NOR ROM and 64M SDR RAM.
   
 2. This router has **tamper protection** in place, any attempt to boot from 3rd -party/non-authorized firmware will result in **boot-loop**, even you have flashed the famous breed bootloader. To recovery from this disaster, use a program called "breed enter" and follow it's instructions to get back to breed bootloader.
   
