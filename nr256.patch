@@ -1,0 +1,135 @@
+diff --git a/target/linux/ramips/dts/NR256.dts b/target/linux/ramips/dts/NR256.dts
+new file mode 100644
+index 0000000000..461b01622b
+--- /dev/null
++++ b/target/linux/ramips/dts/NR256.dts
+@@ -0,0 +1,111 @@
++/dts-v1/;
++
++#include "rt3050.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	compatible = "netcore,nr256", "ralink,rt3052-soc";
++	model = "Netcore NR256";
++
++	aliases {
++		led-boot = &led_cpu;
++		led-failsafe = &led_cpu;
++		led-running = &led_cpu;
++		led-upgrade = &led_cpu;
++	};
++
++    flash@0 {
++           compatible = "jedec,spi-nor";
++           reg = <0>;
++           spi-max-frequency = <10000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "u-boot";
++				reg = <0x0 0x20000>;
++				read-only;
++			};
++
++			partition@20000 {
++				label = "u-boot-env";
++				reg = <0x20000 0x10000>;
++				read-only;
++			};
++
++			factory: partition@30000 {
++				label = "factory";
++				reg = <0x30000 0x10000>;
++				read-only;
++			};
++
++			partition@40000 {
++				compatible = "denx,uimage";
++				label = "firmware";
++				reg = <0x40000 0x7b0000>;
++			};
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_cpu: cpu {
++			label = "green:cpu";
++			gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
++		};
++		wan {
++			label = "amber:wan";
++			gpios = <&gpio0 7 GPIO_ACTIVE_LOW>;
++		};
++
++		wan2 {
++			label = "amber:wan2";
++			gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
++		};
++
++		lan1 {
++			label = "amber:lan1";
++			gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
++		};
++
++		lan2 {
++			label = "amber:lan2";
++			gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
++		};
++
++	};
++
++	keys {
++		compatible = "gpio-keys-polled";
++		poll-interval = <10>;
++
++		reset {
++			label = "reset";
++			gpios = <&gpio0 10 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_RESTART>;
++		};
++	};
++};
++
++&pinctrl {
++	state_default: pinctrl0 {
++		gpio {
++			ralink,group = "spi", "i2c", "jtag", "rgmii", "mdio", "uartf";
++			ralink,function = "gpio";
++		};
++	};
++};
++
++&ethernet {
++	mtd-mac-address = <&factory 0x28>;
++};
++
++&esw {
++	mediatek,portmap = <0x2f>;
++};
+diff --git a/target/linux/ramips/image/rt305x.mk b/target/linux/ramips/image/rt305x.mk
+index 59f0cbdee6..d534f25221 100644
+--- a/target/linux/ramips/image/rt305x.mk
++++ b/target/linux/ramips/image/rt305x.mk
+@@ -580,6 +580,13 @@ define Device/nixcore-x1-16M
+ endef
+ TARGET_DEVICES += nixcore-x1-16M
+ 
++define Device/nr256
++  DTS := NR256
++  DEVICE_TITLE := Netcore NR256
++  DEVICE_PACKAGES := kmod-leds-gpio 
++endef
++TARGET_DEVICES += nr256
++
+ define Device/nw718
+   DTS := NW718
+   IMAGE_SIZE := 3712k
