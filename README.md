@@ -1,5 +1,5 @@
 # openwrt_nr256
-Adding dts and necessary files to support Netcore NR256 router in openwrt
+Adding dts and necessary files to support **Netcore NR256** router in openwrt
 
 For personal record usage. If you bumped into this repo and want to use the patch, some hints below:
 
